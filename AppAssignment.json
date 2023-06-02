@@ -1,0 +1,47 @@
+
+import * as React from 'react';
+import { View, Text, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+function Signup(value) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Sign Up </Text>
+      <Button title="Go to Login Screen"  onPress={() => value.navigation.navigate('login')}></Button>
+      <Button title="Go to Profile Screen"  onPress={() => value.navigation.navigate('profile')}></Button>
+    </View>
+  );
+}
+function Login(data) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Login Page </Text>
+      <Button title="Go back" onPress={() => data.naviagtion.navigate("signup")} />
+    </View>
+  );
+}
+function Profile(props) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Profile </Text>
+      <Button title="Go to Home Screen"  onPress={() => value.navigation.navigate('signup')}></Button>
+    </View>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="signup" component={Signup} />
+        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="profile" component={Profile} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
