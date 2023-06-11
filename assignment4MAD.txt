@@ -1,0 +1,105 @@
+import React, { useState } from 'react';
+import { View, Text, Button, TextInput } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+function Signup({ navigation }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignup = async () => {
+    try {
+      // Store the user information in local storage
+      await AsyncStorage.setItem('username', username);
+      await AsyncStorage.setItem('password', password);
+      navigation.navigate('login');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Sign Up</Text>
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <Button title="Sign Up" onPress={handleSignup} />
+    </View>
+  );
+}
+
+function Login({ navigation }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      // Retrieve the user information from local storage
+      const storedUsername = await AsyncStorage.getItem('username');
+      const storedPassword = await AsyncStorage.getItem('password');
+
+      if (username === storedUsername && password === storedPassword) {
+        navigation.navigate('profile');
+      } else {
+        console.log('Invalid username or password');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Login Page</Text>
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <Button title="Login" onPress={handleLogin} />
+      <Button title="Go back" onPress={() => navigation.navigate('signup')} />
+    </View>
+  );
+}
+
+function Profile({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Profile</Text>
+      <Button
+        title="Go to Home Screen"
+        onPress={() => navigation.navigate('signup')}
+      />
+    </View>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="signup" component={Signup} />
+        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="profile" component={Profile} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
